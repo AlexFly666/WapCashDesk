@@ -12,8 +12,12 @@ import com.newcapec.wapcashdesk.service.vo.desk.PayWayReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysRspVO;
 import com.newcapec.wapcashdesk.service.vo.pay.PayWays;
+import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderReqVO;
+import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO;
 import com.newcapec.wapcashdesk.utils.common.DateTimeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,8 @@ import java.util.List;
 @Service
 public class PayServiceImpl implements PayService {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 调用支付服务工具类
      */
@@ -55,14 +61,26 @@ public class PayServiceImpl implements PayService {
     @Value("${pay.service.payways.url}")
     private String payWaysURL;
 
+    /**
+     * 接口名称 <预支付>
+     */
+    @Value("${pay.service.prepay.url}")
+    private String prepayOrderURL;
+
 
     /**
-     * @Title: 获取支付方式列表
-     * @methodName: payWays
+     * 接口名称 <订单状态查询>
+     */
+    @Value("${pay.service.query.url}")
+    private String queryOrderURL;
+
+
+    /**
      * @param payWay
      * @return com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysRspVO
+     * @Title: 获取支付方式列表
+     * @methodName: payWays
      * @Description:
-     *
      * @author: 王延飞
      * @date: 2018-07-23 9:58
      */
@@ -73,6 +91,13 @@ public class PayServiceImpl implements PayService {
 
 
         // 参数校验
+        if (payWay == null) {
+
+            getPayWaysRspVO = new GetPayWaysRspVO();
+            getPayWaysRspVO.setReturncode(SysConstant.ERROR);
+            getPayWaysRspVO.setReturnmsg("【获取支付方式列表】,请求参数为空");
+            return getPayWaysRspVO;
+        }
         if (StringUtils.isBlank(payServiceApiURL)) {
             getPayWaysRspVO = new GetPayWaysRspVO();
             getPayWaysRspVO.setReturncode(SysConstant.ERROR);
@@ -129,11 +154,17 @@ public class PayServiceImpl implements PayService {
         String payWaysParam = JSONObject.toJSONString(getPayWaysReqVO);
 
         JSONObject payWaysReturn = null;
+        String url = new StringBuilder().append(payServiceApiURL).append(payWaysURL).toString().trim();
         try {
-            String url = new StringBuilder().append(payServiceApiURL).append(payWaysURL).toString().trim();
             payWaysReturn = payServiceUtils.getContent(url, payWaysParam);
         } catch (Exception e) {
             e.printStackTrace();
+            log.info("【获取支付方式列表-调用支付平台异常】,请求地址：{}，业务数据：{}", url, payWaysParam);
+            getPayWaysRspVO = new GetPayWaysRspVO();
+            getPayWaysRspVO.setReturncode(SysConstant.ERROR);
+            getPayWaysRspVO.setReturnmsg("【获取支付方式列表】,调用支付平台异常");
+            return getPayWaysRspVO;
+
         }
 
         getPayWaysRspVO = JSONObject.parseObject(payWaysReturn.toJSONString(), GetPayWaysRspVO.class);
@@ -149,7 +180,6 @@ public class PayServiceImpl implements PayService {
         if (projectPaywayList == null || projectPaywayList.size() < 0) {
             return getPayWaysRspVO;
         }
-
 
 
         // 2.业务系统支付方式列表!=空时，业务系统支付方式列表 ∩ 支付服务支付方式列表
@@ -192,5 +222,95 @@ public class PayServiceImpl implements PayService {
 
         return getPayWaysRspVO;
     }
+
+
+    /**
+     * @param orderReq
+     * @return com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO
+     * @Title: 预支付
+     * @methodName: prepayOrder
+     * @Description:
+     * @author: 王延飞
+     * @date: 2018-07-23 17:07
+     */
+    @Override
+    public PrepayOrderRspVO prepayOrder(PrepayOrderReqVO orderReq) {
+
+
+        PrepayOrderRspVO orderRsp;
+
+        //  参数校验
+        if (orderReq == null) {
+            orderRsp = new PrepayOrderRspVO();
+            orderRsp.setReturncode(SysConstant.ERROR);
+            orderRsp.setReturnmsg("【预支付】,请求参数为空");
+            return orderRsp;
+        }
+
+        /**
+         * 商户编号
+         */
+        String merchantno = orderReq.getMerchantno();
+        if (StringUtils.isBlank(merchantno)) {
+            orderRsp = new PrepayOrderRspVO();
+            orderRsp.setReturncode(SysConstant.ERROR);
+            orderRsp.setReturnmsg("【预支付】,请求参数-商户编号为空");
+            return orderRsp;
+        }
+
+        /**
+         * 商户订单编号
+         */
+        String journo = orderReq.getJourno();
+        if (StringUtils.isBlank(journo)) {
+            orderRsp = new PrepayOrderRspVO();
+            orderRsp.setReturncode(SysConstant.ERROR);
+            orderRsp.setReturnmsg("【预支付】,请求参数-商户订单编号为空");
+            return orderRsp;
+        }
+        /**
+         *支付方式编号
+         */
+        String paywayid = orderReq.getPaywayid();
+        if (StringUtils.isBlank(paywayid)) {
+            orderRsp = new PrepayOrderRspVO();
+            orderRsp.setReturncode(SysConstant.ERROR);
+            orderRsp.setReturnmsg("【预支付】,请求参数-支付方式编号为空");
+            return orderRsp;
+        }
+        /**
+         *支付渠道编号
+         */
+        String channelno = orderReq.getChannelno();
+        if (StringUtils.isBlank(channelno)) {
+            orderRsp = new PrepayOrderRspVO();
+            orderRsp.setReturncode(SysConstant.ERROR);
+            orderRsp.setReturnmsg("【预支付】,请求参数-支付渠道编号为空");
+            return orderRsp;
+        }
+
+        orderReq.setNoncestr(DateTimeUtils.getTimeStamp());
+
+        String prepayOrderParam = JSONObject.toJSONString(orderReq);
+
+        JSONObject payWaysReturn = null;
+        String url = new StringBuilder().append(payServiceApiURL).append(prepayOrderURL).toString().trim();
+        try {
+            payWaysReturn = payServiceUtils.getContent(url, prepayOrderParam);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("【预支付-调用支付平台异常】,请求地址：{}，业务数据：{}", url, prepayOrderParam);
+            orderRsp = new PrepayOrderRspVO();
+            orderRsp.setReturncode(SysConstant.ERROR);
+            orderRsp.setReturnmsg("【获取支付方式列表】,调用支付平台异常");
+            return orderRsp;
+        }
+
+        orderRsp = JSONObject.parseObject(payWaysReturn.toJSONString(), PrepayOrderRspVO.class);
+
+        return orderRsp;
+    }
+
+
 
 }

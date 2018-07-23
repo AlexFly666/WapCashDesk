@@ -3,6 +3,8 @@ package com.newcapec.wapcashdesk.service.pay;
 
 import com.newcapec.wapcashdesk.service.vo.desk.PayWayReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysRspVO;
+import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderReqVO;
+import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO;
 
 /**
  * @Title:
@@ -28,4 +30,16 @@ public interface PayService {
      * @date: 2018-07-23 9:58
      */
     public GetPayWaysRspVO payWays(PayWayReqVO payWay);
+
+
+    /**
+     * @Title: 预支付
+     * @param orderReq
+     * @return com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO
+     * @methodName: prepayOrder
+     * @Description:
+     * @author: 王延飞
+     * @date: 2018-07-23 17:07
+     */
+    public PrepayOrderRspVO prepayOrder(PrepayOrderReqVO orderReq);
 }

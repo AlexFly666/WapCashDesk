@@ -36,9 +36,10 @@
   "projectPaywayList": [
     {
       "accountid": "1",
-      "paywayid": "1003"
+      "paywayid": "0204"
     }
   ]
 }
+
 ~~~
 

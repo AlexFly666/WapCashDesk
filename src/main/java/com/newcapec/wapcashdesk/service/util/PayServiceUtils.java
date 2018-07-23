@@ -94,7 +94,6 @@ public class PayServiceUtils {
             returnJson.put(SysConstant.RETURN_MSG, "【调用支付服务异常】,业务数据-签名失败");
             return returnJson;
         }
-        // sign = java.net.URLEncoder.encode(sign, SysConstant.CHARSET_UTF8);
 
         // 请求参数-加密
         String jsonData = null;
@@ -107,9 +106,6 @@ public class PayServiceUtils {
             returnJson.put(SysConstant.RETURN_MSG, "【调用支付服务异常】,业务数据-加密失败");
             return returnJson;
         }
-        //jsonData = Base64.encode(jsonData.getBytes());
-        //jsonData = java.net.URLEncoder.encode(jsonData, SysConstant.CHARSET_UTF8);
-        // String requestparam = "partnerid=" + partnerid + "&jsonData=" + jsonData + "&sign=" + sign;
         HashMap<String, String> requestparam = new HashMap<>();
         requestparam.put("partnerid",partnerid);
         requestparam.put("jsonData",jsonData);
@@ -118,7 +114,6 @@ public class PayServiceUtils {
         // 支付服务-返回值
         String remsg;
         try {
-            //remsg = HttpClientUtil.sendPost(url, requestparam);
              remsg = HttpClientUtil.doPost(url, requestparam);
         } catch (Exception e) {
             e.printStackTrace();

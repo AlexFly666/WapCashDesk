@@ -1,9 +1,10 @@
 package com.newcapec.wapcashdesk.controller;
 
-import com.newcapec.wapcashdesk.constant.SysConstant;
 import com.newcapec.wapcashdesk.service.pay.PayService;
 import com.newcapec.wapcashdesk.service.vo.desk.PayWayReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysRspVO;
+import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderReqVO;
+import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -44,24 +45,28 @@ public class PayController {
     @PostMapping("/payWays")
     public GetPayWaysRspVO payWays(@RequestBody PayWayReqVO payWay) {
 
-        GetPayWaysRspVO getPayWaysRspVO;
-
-        // 参数校验
-        if (payWay == null) {
-
-            getPayWaysRspVO = new GetPayWaysRspVO();
-            getPayWaysRspVO.setReturncode(SysConstant.ERROR);
-            getPayWaysRspVO.setReturnmsg("【获取支付方式列表】,请求参数为空");
-            return getPayWaysRspVO;
-        }
-
-        getPayWaysRspVO = payService.payWays(payWay);
+        GetPayWaysRspVO getPayWaysRspVO = payService.payWays(payWay);
 
         return getPayWaysRspVO;
     }
 
-    public static void main(String[] args) {
+    /**
+     * @param orderReq
+     * @return com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO
+     * @Title: 预支付
+     * @methodName: prepayOrder
+     * @Description:
+     * @author: 王延飞
+     * @date: 2018-07-23 17:28
+     */
+    @ApiOperation(value = "预支付", notes = "商户系统调用预下单成功后，调用此接口获取呼起三方支付平台的参数")
+    @PostMapping("/prepayOrder")
+    public PrepayOrderRspVO prepayOrder(@RequestBody PrepayOrderReqVO orderReq) {
 
+
+        PrepayOrderRspVO prepayOrderRspVO = payService.prepayOrder(orderReq);
+
+        return prepayOrderRspVO;
     }
 
 }

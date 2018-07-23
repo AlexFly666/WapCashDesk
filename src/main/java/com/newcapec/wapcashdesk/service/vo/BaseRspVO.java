@@ -1,5 +1,7 @@
 package com.newcapec.wapcashdesk.service.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -13,14 +15,17 @@ import lombok.Data;
  * @version V1.0
  */
 @Data
+@ApiModel
 public class BaseRspVO {
 
     /**
      *  返回码，表示响应结果
      */
+    @ApiModelProperty(value = "返回码",required=true)
     private String returncode;
     /**
      *  返回信息，表示响应信息
      */
+    @ApiModelProperty(value = "返回信息",required=true)
     private String returnmsg;
 }

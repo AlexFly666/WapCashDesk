@@ -1,5 +1,7 @@
 package com.newcapec.wapcashdesk.service.vo.desk;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -13,15 +15,18 @@ import lombok.Data;
  * @version V1.0
  */
 @Data
+@ApiModel
 public class PayWay {
 
     /**
      * 支付方式编号
      */
+    @ApiModelProperty(value = "支付方式编号",required=true)
     private  String paywayid;
     /**
      * 支付方式账户
      */
+    @ApiModelProperty(value = "支付方式账户",required=true)
     private  String accountid;
 
 }

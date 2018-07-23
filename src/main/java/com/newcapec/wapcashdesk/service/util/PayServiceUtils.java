@@ -3,6 +3,7 @@ package com.newcapec.wapcashdesk.service.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.newcapec.wapcashdesk.constant.SysConstant;
+import com.newcapec.wapcashdesk.utils.encrypt.Base64;
 import com.newcapec.wapcashdesk.utils.encrypt.DesUtil;
 import com.newcapec.wapcashdesk.utils.encrypt.RsaUtil;
 import com.newcapec.wapcashdesk.utils.http.HttpClientUtil;
@@ -19,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 /**
  * @version V1.0
@@ -92,7 +94,7 @@ public class PayServiceUtils {
             returnJson.put(SysConstant.RETURN_MSG, "【调用支付服务异常】,业务数据-签名失败");
             return returnJson;
         }
-        sign = java.net.URLEncoder.encode(sign, SysConstant.CHARSET_UTF8);
+        // sign = java.net.URLEncoder.encode(sign, SysConstant.CHARSET_UTF8);
 
         // 请求参数-加密
         String jsonData = null;
@@ -105,13 +107,19 @@ public class PayServiceUtils {
             returnJson.put(SysConstant.RETURN_MSG, "【调用支付服务异常】,业务数据-加密失败");
             return returnJson;
         }
-        jsonData = java.net.URLEncoder.encode(jsonData, SysConstant.CHARSET_UTF8);
-        String requestparam = "partnerid=" + partnerid + "&jsonData=" + jsonData + "&sign=" + sign;
+        //jsonData = Base64.encode(jsonData.getBytes());
+        //jsonData = java.net.URLEncoder.encode(jsonData, SysConstant.CHARSET_UTF8);
+        // String requestparam = "partnerid=" + partnerid + "&jsonData=" + jsonData + "&sign=" + sign;
+        HashMap<String, String> requestparam = new HashMap<>();
+        requestparam.put("partnerid",partnerid);
+        requestparam.put("jsonData",jsonData);
+        requestparam.put("sign",sign);
 
         // 支付服务-返回值
         String remsg;
         try {
-            remsg = HttpClientUtil.doPostJson(url, requestparam);
+            //remsg = HttpClientUtil.sendPost(url, requestparam);
+             remsg = HttpClientUtil.doPost(url, requestparam);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("【失败调用支付服务接口】请求地址：{},请求参数：{},异常信息", url, requestparam,e);
@@ -146,7 +154,7 @@ public class PayServiceUtils {
             returnJson.put(SysConstant.RETURN_MSG, "【调用支付服务异常】,返回数据-解密失败");
             return returnJson;
         }
-        log.info("【调用支付服务】请求地址：{},请求参数：{},返回值<解密后>：{}", url, requestparam,remsg);
+        log.info("【调用支付服务】请求地址：{},请求参数：{},返回值<解密后>：{}", url, requestparam,paybody);
 
         //验证签名
         boolean verify;

@@ -1,5 +1,7 @@
 package com.newcapec.wapcashdesk.service.vo.pay;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -13,15 +15,17 @@ import lombok.Data;
  * @version V1.0
  */
 @Data
+@ApiModel
 public class PayAccount {
 
     /**
      * 支付账户编号
      */
-
+    @ApiModelProperty(value = "支付账户编号",required=true)
     private String accountname;
     /**
      * 支付账户名称
      */
+    @ApiModelProperty(value = "支付账户名称",required=true)
     private String accountid;
 }

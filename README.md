@@ -3,7 +3,7 @@
 ### 接口文档 ###
 
 * [项目SWAGGER文档](http://localhost:8888/WapCashDesk/swagger-ui.html)
-* [项目SWAGGER文档](http://192.168.60.207:8888/WapCashDesk/swagger-ui.html)
+* [项目SWAGGER文档<IP>](http://192.168.60.207:8888/WapCashDesk/swagger-ui.html)
 * [项目SWAGGER文档<域名>](http://flyswagger.tunnel.qydev.com/WapCashDesk/swagger-ui.html)
 
 ### 项目启动 ###
@@ -17,8 +17,8 @@
 
 ### 项目访问地址 ###
 
-* [本地地址](http://flyswagger.tunnel.qydev.com/WapCashDesk/)
-* [本地地址](http://192.168.60.207:8888/WapCashDesk/)
+* [本地地址<域名>](http://flyswagger.tunnel.qydev.com/WapCashDesk/)
+* [本地地址<IP>](http://192.168.60.207:8888/WapCashDesk/)
 
 * [公测地址](http://118.178.196.42:8888/WapCashDesk/)
 

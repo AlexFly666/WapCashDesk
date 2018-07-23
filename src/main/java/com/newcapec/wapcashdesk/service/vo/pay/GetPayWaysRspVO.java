@@ -1,6 +1,7 @@
 package com.newcapec.wapcashdesk.service.vo.pay;
 
 import com.newcapec.wapcashdesk.service.vo.BaseRspVO;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
@@ -23,5 +24,6 @@ public class GetPayWaysRspVO extends BaseRspVO {
     /**
      * 支付方式列表
      */
+    @ApiModelProperty(value = "支付方式列表",required=true)
     private List<PayWays> payways;
 }

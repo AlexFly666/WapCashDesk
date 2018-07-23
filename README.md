@@ -1,2 +1,44 @@
 # WapCashDesk
-WapCashDesk Of Newcapec
+
+### 接口文档 ###
+
+* [项目SWAGGER文档](http://localhost:8888/WapCashDesk/swagger-ui.html)
+* [项目SWAGGER文档](http://192.168.60.207:8888/WapCashDesk/swagger-ui.html)
+* [项目SWAGGER文档<域名>](http://flyswagger.tunnel.qydev.com/WapCashDesk/swagger-ui.html)
+
+### 项目启动 ###
+
+* [MAIN方法--启动](http://192.168.60.207:8888/WapCashDesk)
+* [WAR包--启动](http://192.168.60.207:8888/WapCashDesk)
+
+### 项目监控 ###
+
+* [应用监控](http://localhost:8088/health)
+
+### 项目访问地址 ###
+
+* [本地地址](http://flyswagger.tunnel.qydev.com/WapCashDesk/)
+* [本地地址](http://192.168.60.207:8888/WapCashDesk/)
+
+* [公测地址](http://118.178.196.42:8888/WapCashDesk/)
+
+* [正式地址](http://210.43.241.76:8888/WapCashDesk/)
+
+
+### 接口名称 ###
+
+* [获取支付方式](http://flyswagger.tunnel.qydev.com/WapCashDesk/payWays)
+~~~
+{
+  "channelno": "13",
+  "merchantno": "20171200300",
+  "partnerid": "PT000002",
+  "projectPaywayList": [
+    {
+      "accountid": "1",
+      "paywayid": "1003"
+    }
+  ]
+}
+~~~
+

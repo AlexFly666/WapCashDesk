@@ -14,6 +14,8 @@ import com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysRspVO;
 import com.newcapec.wapcashdesk.service.vo.pay.PayWays;
 import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO;
+import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderReqVO;
+import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderRspVO;
 import com.newcapec.wapcashdesk.utils.common.DateTimeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -159,7 +161,7 @@ public class PayServiceImpl implements PayService {
             payWaysReturn = payServiceUtils.getContent(url, payWaysParam);
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("【获取支付方式列表-调用支付平台异常】,请求地址：{}，业务数据：{}", url, payWaysParam);
+            log.info("【获取支付方式列表-调用支付平台异常】,请求地址：{}，业务数据：{},异常信息：{}", url, payWaysParam, e);
             getPayWaysRspVO = new GetPayWaysRspVO();
             getPayWaysRspVO.setReturncode(SysConstant.ERROR);
             getPayWaysRspVO.setReturnmsg("【获取支付方式列表】,调用支付平台异常");
@@ -293,24 +295,79 @@ public class PayServiceImpl implements PayService {
 
         String prepayOrderParam = JSONObject.toJSONString(orderReq);
 
-        JSONObject payWaysReturn = null;
+        JSONObject prepayOrderReturn = null;
         String url = new StringBuilder().append(payServiceApiURL).append(prepayOrderURL).toString().trim();
         try {
-            payWaysReturn = payServiceUtils.getContent(url, prepayOrderParam);
+            prepayOrderReturn = payServiceUtils.getContent(url, prepayOrderParam);
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("【预支付-调用支付平台异常】,请求地址：{}，业务数据：{}", url, prepayOrderParam);
+            log.info("【预支付-调用支付平台异常】,请求地址：{}，业务数据：{},异常信息：{}", url, prepayOrderParam, e);
             orderRsp = new PrepayOrderRspVO();
             orderRsp.setReturncode(SysConstant.ERROR);
             orderRsp.setReturnmsg("【获取支付方式列表】,调用支付平台异常");
             return orderRsp;
         }
 
-        orderRsp = JSONObject.parseObject(payWaysReturn.toJSONString(), PrepayOrderRspVO.class);
+        orderRsp = JSONObject.parseObject(prepayOrderReturn.toJSONString(), PrepayOrderRspVO.class);
 
         return orderRsp;
     }
 
+    /**
+     * @param queryReq
+     * @return com.newcapec.wapcashdesk.service.vo.pay.QueryOrderRspVO
+     * @Title: 订单状态查询
+     * @methodName: queryOrder
+     * @Description:
+     * @author: 王延飞
+     * @date: 2018-07-23 18:47
+     */
+    @Override
+    public QueryOrderRspVO queryOrder(QueryOrderReqVO queryReq) {
 
+        QueryOrderRspVO queryRsp = null;
+
+        // 参数校验
+        if (queryReq == null) {
+            queryRsp = new QueryOrderRspVO();
+            queryRsp.setReturncode(SysConstant.ERROR);
+            queryRsp.setReturnmsg("【订单状态查询】,请求参数为空");
+            return queryRsp;
+        }
+
+        String orderno = queryReq.getOrderno();
+        if (StringUtils.isBlank(orderno)) {
+            queryRsp = new QueryOrderRspVO();
+            queryRsp.setReturncode(SysConstant.ERROR);
+            queryRsp.setReturnmsg("【订单状态查询】,请求参数-订单编号为空");
+            return queryRsp;
+        }
+        String ordernotype = queryReq.getOrdernotype();
+        if (StringUtils.isBlank(ordernotype)) {
+            queryRsp = new QueryOrderRspVO();
+            queryRsp.setReturncode(SysConstant.ERROR);
+            queryRsp.setReturnmsg("【订单状态查询】,请求参数-订单编号类型为空");
+            return queryRsp;
+        }
+        queryReq.setNoncestr(DateTimeUtils.getTimeStamp());
+
+        String queryOrderParam = JSONObject.toJSONString(queryReq);
+        JSONObject prepayOrderReturn;
+        String url = new StringBuilder().append(payServiceApiURL).append(queryOrderURL).toString().trim();
+        try {
+            prepayOrderReturn = payServiceUtils.getContent(url, queryOrderParam);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("【订单状态查询-调用支付平台异常】,请求地址：{}，业务数据：{},异常信息：{}", url, queryOrderParam, e);
+            queryRsp = new QueryOrderRspVO();
+            queryRsp.setReturncode(SysConstant.ERROR);
+            queryRsp.setReturnmsg("【订单状态查询】,调用支付平台异常");
+            return queryRsp;
+        }
+
+        queryRsp = JSONObject.parseObject(prepayOrderReturn.toJSONString(), QueryOrderRspVO.class);
+
+        return queryRsp;
+    }
 
 }

@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * @Title:
+ * @Title: 支付服务-预支付-请求参数
  * @ClassName: com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderReqVO.java
  * @Description:
  *

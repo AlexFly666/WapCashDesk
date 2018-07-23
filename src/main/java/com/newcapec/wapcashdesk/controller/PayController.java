@@ -5,6 +5,8 @@ import com.newcapec.wapcashdesk.service.vo.desk.PayWayReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysRspVO;
 import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO;
+import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderReqVO;
+import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderRspVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -67,6 +69,26 @@ public class PayController {
         PrepayOrderRspVO prepayOrderRspVO = payService.prepayOrder(orderReq);
 
         return prepayOrderRspVO;
+    }
+
+
+    /**
+     * @param queryReq
+     * @return com.newcapec.wapcashdesk.service.vo.pay.QueryOrderRspVO
+     * @Title: 订单状态查询
+     * @methodName: queryOrder
+     * @Description:
+     * @author: 王延飞
+     * @date: 2018-07-23 19:49
+     */
+    @ApiOperation(value = "订单状态查询", notes = "订单状态查询")
+    @PostMapping("/queryOrder")
+    public QueryOrderRspVO queryOrder(@RequestBody QueryOrderReqVO queryReq) {
+
+
+        QueryOrderRspVO queryOrderRspVO = payService.queryOrder(queryReq);
+
+        return queryOrderRspVO;
     }
 
 }

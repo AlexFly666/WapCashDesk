@@ -7,7 +7,7 @@ import lombok.Data;
 
 /**
  * @version V1.0
- * @Title:
+ * @Title: 支付服务-预支付-返回结果
  * @ClassName: com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO.java
  * @Description:
  * @Copyright 2016-2018 新开普 - Powered By 研发中心

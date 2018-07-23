@@ -5,6 +5,8 @@ import com.newcapec.wapcashdesk.service.vo.desk.PayWayReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.GetPayWaysRspVO;
 import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO;
+import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderReqVO;
+import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderRspVO;
 
 /**
  * @Title:
@@ -42,4 +44,16 @@ public interface PayService {
      * @date: 2018-07-23 17:07
      */
     public PrepayOrderRspVO prepayOrder(PrepayOrderReqVO orderReq);
+
+    /**
+     * @Title: 订单状态查询
+     * @methodName: queryOrder
+     * @param queryReq
+     * @return com.newcapec.wapcashdesk.service.vo.pay.QueryOrderRspVO
+     * @Description:
+     *
+     * @author: 王延飞
+     * @date: 2018-07-23 18:47
+     */
+    public QueryOrderRspVO queryOrder(QueryOrderReqVO queryReq);
 }

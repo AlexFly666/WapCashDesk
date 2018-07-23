@@ -43,3 +43,11 @@
 
 ~~~
 
+* [订单状态查询](http://flyswagger.tunnel.qydev.com/WapCashDesk/queryOrder)
+~~~
+{
+  "merchantno": "20171200300",
+  "orderno": "1807231816191200000",
+  "ordernotype": "1"
+}
+~~~

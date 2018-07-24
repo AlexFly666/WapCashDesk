@@ -39,7 +39,7 @@ public class QueryOrderReqVO {
     /**
      * 随机字符串
      */
-    @ApiModelProperty(value = "随机字符串")
+    @ApiModelProperty(value = "随机字符串",hidden = true)
     private String noncestr;
 
 }

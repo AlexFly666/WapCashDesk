@@ -1,8 +1,10 @@
 package com.newcapec.wapcashdesk.service.vo.pay;
 
 import com.newcapec.wapcashdesk.service.vo.BaseRspVO;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.List;
  */
 @Data
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@ApiModel
 public class GetPayWaysRspVO extends BaseRspVO {
 
     /**

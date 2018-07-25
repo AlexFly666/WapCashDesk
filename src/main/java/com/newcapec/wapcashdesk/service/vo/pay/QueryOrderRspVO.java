@@ -4,6 +4,8 @@ import com.newcapec.wapcashdesk.service.vo.BaseRspVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * @Title: 支付服务-订单状态查询-返回结果
@@ -16,6 +18,8 @@ import lombok.Data;
  * @version V1.0
  */
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @ApiModel
 public class QueryOrderRspVO extends BaseRspVO {
 

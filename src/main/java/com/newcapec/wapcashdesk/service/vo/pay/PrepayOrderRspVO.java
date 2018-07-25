@@ -4,6 +4,8 @@ import com.newcapec.wapcashdesk.service.vo.BaseRspVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * @version V1.0
@@ -15,6 +17,8 @@ import lombok.Data;
  * @date: 2018-07-23 16:11
  */
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @ApiModel
 public class PrepayOrderRspVO extends BaseRspVO {
 

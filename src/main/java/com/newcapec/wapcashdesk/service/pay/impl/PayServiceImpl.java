@@ -17,6 +17,7 @@ import com.newcapec.wapcashdesk.service.vo.pay.PrepayOrderRspVO;
 import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderReqVO;
 import com.newcapec.wapcashdesk.service.vo.pay.QueryOrderRspVO;
 import com.newcapec.wapcashdesk.utils.common.DateTimeUtils;
+import com.newcapec.wapcashdesk.utils.common.SysUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -94,7 +96,6 @@ public class PayServiceImpl implements PayService {
 
         // 参数校验
         if (payWay == null) {
-
             getPayWaysRspVO = new GetPayWaysRspVO();
             getPayWaysRspVO.setReturncode(SysConstant.ERROR);
             getPayWaysRspVO.setReturnmsg("【获取支付方式列表】,请求参数为空");
@@ -292,6 +293,16 @@ public class PayServiceImpl implements PayService {
         }
 
         orderReq.setNoncestr(DateTimeUtils.getTimeStamp());
+        try {
+            orderReq.setIp(SysUtils.getIpAddress());
+        } catch (UnknownHostException e) {
+            log.warn("【预支付】,获取本机IP异常,异常信息：{}",e);
+            e.printStackTrace();
+            orderRsp = new PrepayOrderRspVO();
+            orderRsp.setReturncode(SysConstant.ERROR);
+            orderRsp.setReturnmsg("【预支付】,获取本机IP异常");
+            return orderRsp;
+        }
 
         String prepayOrderParam = JSONObject.toJSONString(orderReq);
 
@@ -301,7 +312,7 @@ public class PayServiceImpl implements PayService {
             prepayOrderReturn = payServiceUtils.getContent(url, prepayOrderParam);
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("【预支付-调用支付平台异常】,请求地址：{}，业务数据：{},异常信息：{}", url, prepayOrderParam, e);
+            log.warn("【预支付-调用支付平台异常】,请求地址：{}，业务数据：{},异常信息：{}", url, prepayOrderParam, e);
             orderRsp = new PrepayOrderRspVO();
             orderRsp.setReturncode(SysConstant.ERROR);
             orderRsp.setReturnmsg("【获取支付方式列表】,调用支付平台异常");

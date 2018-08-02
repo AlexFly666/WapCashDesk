@@ -47,6 +47,8 @@ public class PayController {
     @PostMapping("/payWays")
     public GetPayWaysRspVO payWays(@RequestBody PayWayReqVO payWay) {
 
+        log.info("【获取支付方式列表】,请求参数：{}", payWay);
+
         GetPayWaysRspVO getPayWaysRspVO = payService.payWays(payWay);
 
         return getPayWaysRspVO;
@@ -65,6 +67,7 @@ public class PayController {
     @PostMapping("/prepayOrder")
     public PrepayOrderRspVO prepayOrder(@RequestBody PrepayOrderReqVO orderReq) {
 
+        log.info("【预支付】,请求参数：{}", orderReq);
 
         PrepayOrderRspVO prepayOrderRspVO = payService.prepayOrder(orderReq);
 
@@ -85,6 +88,7 @@ public class PayController {
     @PostMapping("/queryOrder")
     public QueryOrderRspVO queryOrder(@RequestBody QueryOrderReqVO queryReq) {
 
+        log.info("【订单状态查询】,请求参数：{}", queryReq);
 
         QueryOrderRspVO queryOrderRspVO = payService.queryOrder(queryReq);
 

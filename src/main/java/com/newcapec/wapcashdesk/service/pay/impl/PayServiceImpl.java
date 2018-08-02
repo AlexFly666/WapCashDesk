@@ -30,6 +30,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -178,12 +180,19 @@ public class PayServiceImpl implements PayService {
 
         // 业务系统支付方式列表 ∩ 支付服务支付方式列表【业务系统支付方式列表=NULL或者空时，展示全部】
 
+        // 支付服务支付方式列表
+        List<PayWays> payways = getPayWaysRspVO.getPayways();
+        if (payways == null || payways.size() < 0) {
+            return getPayWaysRspVO;
+        }
+
         // 1.业务系统支付方式列表=NULL或者空时，展示全部
         List<PayWay> projectPaywayList = payWay.getProjectPaywayList();
         if (projectPaywayList == null || projectPaywayList.size() < 0) {
             return getPayWaysRspVO;
         }
 
+        log.info("【获取支付方式列表】,业务系统支付方式列表：{}", projectPaywayList);
 
         // 2.业务系统支付方式列表!=空时，业务系统支付方式列表 ∩ 支付服务支付方式列表
         ArrayList<String> projectPayWayIdList = new ArrayList<>();
@@ -192,38 +201,44 @@ public class PayServiceImpl implements PayService {
             projectPayWayIdList.add(paywayid);
 
         }
-        List<PayWays> payways = getPayWaysRspVO.getPayways();
 
 
-        if (payways != null && payways.size() > 0) {
-            // 过滤--业务系统支付方式列表 ∩ 支付服务支付方式列表 :
-            Collection<PayWays> filterCollection =
-                    Collections2.filter(payways, new Predicate<PayWays>() {
-                        @Override
-                        public boolean apply(PayWays input) {
-                            String paywayid = input.getPaywayid();
-                            boolean contains = projectPayWayIdList.contains(paywayid);
-                            if (contains) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-
+        // 过滤--业务系统支付方式列表 ∩ 支付服务支付方式列表 :
+        Collection<PayWays> filterCollection =
+                Collections2.filter(payways, new Predicate<PayWays>() {
+                    @Override
+                    public boolean apply(PayWays input) {
+                        String paywayid = input.getPaywayid();
+                        boolean contains = projectPayWayIdList.contains(paywayid);
+                        if (contains) {
+                            return true;
+                        } else {
+                            return false;
                         }
-                    });
-            PayWays[] payArr = new PayWays[filterCollection.size()];
-            filterCollection.toArray(payArr);
-            payways = Arrays.asList(payArr);
-            getPayWaysRspVO = new GetPayWaysRspVO();
-            getPayWaysRspVO.setReturncode(SysConstant.SUCCESS);
-            getPayWaysRspVO.setReturnmsg("成功获取支付方式列表");
-            getPayWaysRspVO.setPayways(payways);
-            return getPayWaysRspVO;
 
-        }
+                    }
+                });
+        log.info("【获取支付方式列表】,交集--业务系统支付方式列表 ∩ 支付服务支付方式列表：{}", filterCollection);
+        PayWays[] payArr = new PayWays[filterCollection.size()];
+        filterCollection.toArray(payArr);
+        payways = Arrays.asList(payArr);
 
+        Collections.sort(payways, new Comparator<PayWays>() {
+            @Override
+            public int compare(PayWays o1, PayWays o2) {
+                return Integer.valueOf(o1.getSortid()) - Integer.valueOf(o2.getSortid());
+            }
+        });
 
+        log.info("【获取支付方式列表】,排序--支付方式列表：{}", payways);
+
+        getPayWaysRspVO = new GetPayWaysRspVO();
+        getPayWaysRspVO.setReturncode(SysConstant.SUCCESS);
+        getPayWaysRspVO.setReturnmsg("成功获取支付方式列表");
+        getPayWaysRspVO.setPayways(payways);
         return getPayWaysRspVO;
+
+
     }
 
 
@@ -296,7 +311,7 @@ public class PayServiceImpl implements PayService {
         try {
             orderReq.setIp(SysUtils.getIpAddress());
         } catch (UnknownHostException e) {
-            log.warn("【预支付】,获取本机IP异常,异常信息：{}",e);
+            log.warn("【预支付】,获取本机IP异常,异常信息：{}", e);
             e.printStackTrace();
             orderRsp = new PrepayOrderRspVO();
             orderRsp.setReturncode(SysConstant.ERROR);

@@ -29,6 +29,14 @@ public class PayWayReqVO {
 
 
     /**
+     * 版本号<br/>
+     * 聚合支付平台会提供小于等于这个版本号的支付方式，用于客户端做过滤<br/>
+     */
+    @ApiModelProperty(value = "版本号",required=true)
+    private String version;
+
+
+    /**
      * 业务系统-支付方式列表
      */
     @ApiModelProperty(value = "业务系统-支付方式列表")

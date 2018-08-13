@@ -147,6 +147,18 @@ public class PayServiceImpl implements PayService {
             return getPayWaysRspVO;
         }
 
+        /**
+         * 版本号<br/>
+         * 聚合支付平台会提供小于等于这个版本号的支付方式，用于客户端做过滤<br/>
+         */
+        String version = payWay.getVersion();
+        version = StringUtils.isEmpty(version) ? "10.0" : version;
+        /*if (StringUtils.isBlank(version)) {
+            getPayWaysRspVO = new GetPayWaysRspVO();
+            getPayWaysRspVO.setReturncode(SysConstant.ERROR);
+            getPayWaysRspVO.setReturnmsg("【获取支付方式列表】,请求参数-版本号为空");
+            return getPayWaysRspVO;
+        }*/
 
         // 请求参数
         GetPayWaysReqVO getPayWaysReqVO = new GetPayWaysReqVO();
@@ -155,6 +167,7 @@ public class PayServiceImpl implements PayService {
         getPayWaysReqVO.setChannelno(channelno);
         getPayWaysReqVO.setNoncestr(DateTimeUtils.getTimeStamp());
         getPayWaysReqVO.setPayserver(SysConstant.STATUS_ONE);
+        getPayWaysReqVO.setVersion(version);
 
         String payWaysParam = JSONObject.toJSONString(getPayWaysReqVO);
 
